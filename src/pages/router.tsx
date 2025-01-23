@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router';
 
 import App from '@/App';
-import BlogEm from '@/pages/blog-em/page';
+import BlogEm from '@/pages/blog-em/Page';
 import InfiniteSwapi from '@/pages/infinite-swapi/page';
 import LazyDays from '@/pages/lazy-days/page';
 
