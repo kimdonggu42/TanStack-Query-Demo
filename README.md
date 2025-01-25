@@ -1,50 +1,96 @@
-# React + TypeScript + Vite
+# 1. Tanstack Query란?
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+- Tanstack Query는 서버 상태를 관리하는 라이브러리다.
 
-Currently, two official plugins are available:
+## 1. 클라이언트 상태와 서버 상태
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 1. 클라이언트 상태
 
-## Expanding the ESLint configuration
+- 클라이언트 상태란 웹 브라우저 세션과 관련된 모든 정보를 의미한다. 예를 들어, 테마 선택과 같은 상태 관리는 서버와는 무관하게 클라이언트에서 사용자의 상태를 추적하는 역할을 합니다.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### 2. 서버 상태
 
-- Configure the top-level `parserOptions` property like this:
+- 서버 상태는 서버에 저장되지만 클라이언트에 필요한 데이터다. 예를 들어 데이터베이스에 저장하는 블로그 게시물 데이터가 이에 해당한다. 사용자에게 게시물을 표시하기 위해 클라이언트에 이 데이터가 있어야 하지만 데이터는 여러 클라이언트에 표시할 수 있도록 서버에 저장된다.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
+## 2. Tanstack Query가 해결하고자 하는 문제
+
+- Tanstack Query는 클라이언트에서 서버 데이터 캐시를 효율적으로 관리한다. 클라이언트가 서버 데이터가 필요할 때마다 `fetch`나 `axios`를 사용하여 직접 서버에 요청하는 대신, Tanstack Query의 캐시를 먼저 조회한다. 이를 통해 Source of Truth(모든 비즈니스 데이터를 한 곳에 저장하여 모든 구성원이 동일한 정보에 접근할 수 있도록 하는 원칙)를 실현할 수 있다.
+
+- Tanstack Query의 주요 역할은 클라이언트에서 Tanstack Query 클라이언트를 어떻게 구성했는지에 따라 캐시 데이터를 유지 관리하는 것이다.
+
+## 3. Tanstack Query가 관리하는 데이터
+
+- Tanstack Query는 데이터를 관리하지만, 서버의 새 데이터로 캐시를 업데이트하는 시기를 설정하는 것은 사용자의 책임이다.
+
+- 아래는 Tanstack Query 캐시의 예시로, `blog-post`라는 키가 할당된 데이터를 보여줍니다. 이 키를 통해 데이터가 식별된다. 클라이언트 캐시에 있는 데이터가 서버의 데이터와 일치하는지 확인하는 방법에는 두 가지가 있다.
+
+### 1. 명령형
+
+- 쿼리 클라이언트에 해당 데이터를 무효화하고, 새로운 데이터를 서버에서 가져오도록 지시한다.
+
+```javascript
+key: ['blog-post'],
+data: [
+  {
+    title: 'React Query',
+    tagLine: 'What is this thing?',
   },
-})
+  {
+    title: 'React Query Mutations',
+    tagLine: 'Not just for ninja turtles',
+  },
+],
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### 2. 선헌형
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+- 다른 하나는 선언형이다. 예를 들어 브라우저 창이 다시 포커스 되었을 때처럼 리페치(Refetch)를 트리거하는 조건을 구성하는 것이다. 그리고 이 staleTime으로 다시 가져오기를 언제 트리거할지도 구성할 수 있다. 30초 후에 브라우저 창이 다시 포거스 되었을 때 서버에서 새 데이터를 가져오도록 구성할 수 있다.
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
+- 예를 들어, 브라우저 창이 다시 포커스될 때와 같이 특정 조건에서 리페치를 트리거하도록 설정한다. `staleTime`을 설정하여 데이터를 다시 가져오는 시점을 제어할 수 있다. 예를 들어, 30초 후에 브라우저 창이 다시 포커스되면 서버에서 새 데이터를 가져오도록 구성할 수 있다.
+
+```javascript
+key: ['blog-post'],
+data: [
+  {
+    title: 'React Query',
+    tagLine: 'What is this thing?',
   },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
+  {
+    title: 'React Query Mutations',
+    tagLine: 'Not just for ninja turtles',
   },
-})
+],
+staleTime: 30000 // 30초
 ```
+
+## 4. Tanstack Query에서 추가적으로 지원하는 기능
+
+- Tanstack Query는 데이터 관리 외에도 서버 상태 관리에 유용한 다양한 도구들을 제공한다.
+
+### 1. 로딩 및 오류 상태 관리
+
+- 모든 쿼리에 대한 로딩 상태와 오류 상태를 자동으로 관리해주기 때문에, 개발자가 수동으로 처리할 필요가 없어진다.
+
+### 2. 페이지네이션 및 무한 스크롤
+
+- 사용자를 위해 데이터의 페이징이나 무한 스크롤이 필요한 경우, 데이터를 조각으로 가져올 수 있는 도구를 제공한다.
+
+### 3. 프리페칭(Prefetching)
+
+- 사용자가 데이터를 필요할 시점을 예측하여 데이터를 미리 가져오고 캐시에 저장할 수 있다. 이를 통해 사용자가 데이터를 요청할 때 서버에 연결할 필요 없이 즉시 데이터를 제공할 수 있다.
+
+### 4. 변이(Mutations)
+
+- 서버에서 데이터의 변이나 업데이트를 관리할 수 있다. 예를 들어, 데이터를 추가, 수정, 삭제하는 작업을 효율적으로 처리할 수 있다.
+
+### 5. 요청 중복 제거(De-duplication of Requests)
+
+- 쿼리는 키로 식별되기 때문에, Tanstack Query는 동일한 데이터를 여러 번 요청하는 경우 이를 한 번의 요청으로 처리할 수 있다. 예를 들어, 여러 구성 요소가 동시에 동일한 데이터를 요청할 때 중복 요청을 제거하여 효율성을 높일 수 있다.
+
+### 6. 오류 발생 시 재시도
+
+- 서버에서 오류가 발생할 경우 자동으로 재시도를 관리할 수 있다. 이를 통해 일시적인 네트워크 문제나 서버 오류에 대한 복구 가능성을 높일 수 있다.
+
+### 7. 콜백(Callbacks)
+
+- 쿼리가 성공하거나 오류가 발생했을 때 특정 작업을 수행할 수 있도록 콜백 함수를 설정할 수 있다. 이를 통해 사용자 경험을 향상시키고, 오류 처리를 용이하게 할 수 있다.
