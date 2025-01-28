@@ -5,7 +5,7 @@ export default function PostDetail({ post }: any) {
 
   return (
     <div className='flex flex-col gap-y-5'>
-      <h3 style={{ color: 'blue' }}>{post.title}</h3>
+      <h3 className='text-blue-500'>{post.title}</h3>
       <div className='flex gap-x-3 text-base'>
         <button className='rounded border border-gray-500 bg-gray-50 px-2'>Delete</button>
         <button className='rounded border border-gray-500 px-2'>Update title</button>

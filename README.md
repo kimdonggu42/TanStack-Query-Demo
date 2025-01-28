@@ -1,6 +1,10 @@
 # 1. Tanstack Query란?
 
-- Tanstack Query는 서버 상태를 관리하는 라이브러리다.
+Tanstack Query는 리액트 애플리케이션에서 서버 상태를 효율적으로 관리할 수 있도록 도와주는 라이브러리다. Tanstack Query는 서버 상태의 가져오기, 캐싱, 동기화 및 업데이트를 보다 쉽게 처리할 수 있게 해주며, 클라이언트 상태와 서버 상태를 명확히 구분하여 관리할 수 있도록 설계되었다.
+
+- Tanstack Query에서는 기존 상태 관리 라이브러리인 redux, mobX가 클라이언트 상태 작업에 적합하지만, 비동기 또는 서버 상태 작업에는 그다지 좋지 않다고 언급한다.
+
+- 클라이언트 상태(Client State)와 서버 상태(Server State)는 완전히 다른 개념이며, 클라이언트 상태는 각각의 input 값으로 예를 들 수 있고, 서버 상태는 데이터베이스에 저장되어 있는 데이터로 예를 들 수 있다.
 
 ## 1. 클라이언트 상태와 서버 상태
 
@@ -22,7 +26,7 @@
 
 - Tanstack Query는 데이터를 관리하지만, 서버의 새 데이터로 캐시를 업데이트하는 시기를 설정하는 것은 사용자의 책임이다.
 
-- 아래는 Tanstack Query 캐시의 예시로, `blog-post`라는 키가 할당된 데이터를 보여줍니다. 이 키를 통해 데이터가 식별된다. 클라이언트 캐시에 있는 데이터가 서버의 데이터와 일치하는지 확인하는 방법에는 두 가지가 있다.
+- 아래는 Tanstack Query 캐시의 예시로, `blog-post`라는 키가 할당된 데이터를 보여준다. 이 키를 통해 데이터가 식별된다. 클라이언트 캐시에 있는 데이터가 서버의 데이터와 일치하는지 확인하는 방법에는 두 가지가 있다.
 
 ### 1. 명령형
 
@@ -94,3 +98,8 @@ staleTime: 30000 // 30초
 ### 7. 콜백(Callbacks)
 
 - 쿼리가 성공하거나 오류가 발생했을 때 특정 작업을 수행할 수 있도록 콜백 함수를 설정할 수 있다. 이를 통해 사용자 경험을 향상시키고, 오류 처리를 용이하게 할 수 있다.
+
+> #### 참고
+>
+> - [공식문서](https://tanstack.com/query/latest/docs/framework/react/overview)
+> - [react-query-tutorial 레포](https://github.com/ssi02014/react-query-tutorial?tab=readme-ov-file#react-query-%EA%B8%B0%EB%B3%B8-%EC%84%A4%EC%A0%95)
