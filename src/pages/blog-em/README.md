@@ -10,7 +10,7 @@
 
 ## 3. useQuery 호출
 
-- `useQuery`는 서버에서 데이터를 가져오고, 그 데이터를 캐시하며 상태를 관리하는 훅이다. 이 훅은 데이터 fetching, 캐싱, 상태 업데이트를 처리하고, `staleTime`, `cacheTime`, `refetchInterval` 등의 옵션으로 쿼리의 동작을 제어할 수 있다.
+- `useQuery`는 서버에서 데이터를 가져오고, 그 데이터를 캐시하며 상태를 관리하는 훅이다. 이 훅은 데이터 fetching, 캐싱, 상태 업데이트를 처리하고, `staleTime`, `cacheTime`, `refetchInterval` 등의 옵션을 통해 쿼리의 동작을 제어할 수 있다. 또한, 기본적으로 실패한 요청은 3번까지 자동으로 재시도한다.
 
 > ### useQueryClient
 >
@@ -31,7 +31,7 @@
 
 ## 1. isFetching
 
-- `isFetching`은 비동기 쿼리가 아직 완료되지 않았음을 나타낸다. 예를 들어, 데이터를 가져오는 중이지만 아직 완료되지 않은 상태이다. 다른 종류의 데이터를 가져오는 작업이라면 이 상태를 통해 로딩 중임을 알 수 있다.
+- `isFetching`은 **캐시된 데이터의 유무와 상관없이** 비동기 쿼리 함수가 현재 실행(로딩) 중이면 `true`가 된다. 예를 들어, 데이터를 가져오는 중이지만 아직 완료되지 않은 상태이다. 다른 종류의 데이터를 가져오는 작업이라면 이 상태를 통해 로딩 중임을 알 수 있다.
 
 > ## 쿼리란?
 
@@ -39,7 +39,7 @@
 
 ## 2. isLoading
 
-- `isLoading`은 `isFetching`의 하위 집합으로, 쿼리 함수가 아직 완료되지 않은 상태이고 캐시된 데이터도 없을 때를 의미한다. 이 경우에는 이전에 해당 쿼리를 실행한 적이 없어서 새로 데이터를 가져오고 있는 중임을 나타낸다.
+- `isLoading`은 `isFetching`의 하위 집합으로, 비동기 쿼리 함수가 현재 실행(로딩) 중이고 **캐시된 데이터도 없을 때** `true`가 된다. 이 상태는 이전에 쿼리를 실행한 적이 없어 새로 데이터를 가져오는 중임을 나타낸다. 따라서 `isLoading`일 때는 항상 `isFetching`도 `true`가 된다.
 
 > #### 참고
 >
@@ -49,9 +49,7 @@
 
 ## 1. staleTime
 
-- `staleTime`은 데이터를 다시 가져와야 할 시점을 결정한다.
-
-- 기본값은 0ms로 설정되어 있으며, 이는 데이터를 가져온 직후 바로 stale로 간주되어 즉시 서버에서 다시 데이터를 가져오려고 시도한다.
+- `staleTime`은 데이터를 다시 가져와야 할 시점을 결정한다. 기본값은 0ms로 설정되어 있으며, 이는 데이터를 가져온 직후 바로 stale로 간주되어 즉시 서버에서 다시 데이터를 가져오려고 시도한다.
 
 > ### Stale Data란?
 
@@ -107,13 +105,12 @@
 >
 > - [Prefetching & Router Integration](https://tanstack.com/query/latest/docs/framework/react/guides/prefetching#prefetchquery--prefetchinfinitequery)
 
-# useQuery와 useQueryClient
+# Mutation
 
-## 1. useQuery
+- Mutation은 서버에 네트워크 요청을 보내 실제 데이터를 업데이트하는 작업을 의미한다. 예를 들어, 블로그 포스트를 추가하거나 삭제하거나, 포스트 제목을 변경하는 등의 경우가 이에 해당한다.
 
-- useQuery는 데이터를 가져오는 데 사용되는 훅입니다. 서버에서 데이터를 요청하고, 그 데이터를 캐시하거나 상태를 관리하는 데 사용됩니다. 이 훅은 주로 데이터 fetching, 캐싱, 그리고 상태 업데이트를 관리하는 데 사용됩니다.
+- `useMutation`은 `useQuery`와 매우 유사하지만 몇 가지 차이점이 있다. `useMutation`은 `mutate` 함수를 반환하는데, 이 함수는 서버에 변경 사항을 적용할 때 사용된다. `useMutation`은 캐시가 없기 때문에 쿼리 키가 필요하지 않으며, `isLoading`과 `isFetching`으로 구분되어 있는 `useQuery`와는 달리 `isPending`만 존재한다. 또한, `useMutation`은 기본적으로 재시도를 하지 않지만, 원하면 자동 재시도를 설정할 수 있다.
 
-서버에서 데이터를 fetch합니다.
-쿼리의 상태(예: 로딩, 에러, 성공 등)를 관리합니다.
-데이터를 캐시에 저장하고, 자동으로 갱신합니다.
-staleTime, cacheTime, refetchInterval 등 다양한 옵션을 통해 쿼리의 동작을 제어할 수 있습니다.
+> #### 참고
+>
+> - [Mutations](https://tanstack.com/query/latest/docs/framework/react/guides/mutations)
