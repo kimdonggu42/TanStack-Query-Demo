@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState, useEffect } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchPosts, deletePost, updatePost } from '@/pages/blog-em/api';
 import PostDetail from '@/pages/blog-em/PostDetail';
 
@@ -9,6 +9,9 @@ export default function Posts() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPost, setSelectedPost] = useState(null);
 
+  // useQueryClient 훅은 QueryClient 객체에 접근하는 데 사용되는 훅이다.
+  const queryClient = useQueryClient();
+
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['posts', currentPage], // 쿼리 캐시 내의 데이터를 정의하며 항상 배열이다.
     queryFn: () => fetchPosts(currentPage), // 데이터를 가져오기 위해 실행할 함수
@@ -16,6 +19,19 @@ export default function Posts() {
     // staleTime이 지난 후에는 데이터가 stale 상태로 간주되고, refetch 트리거가 발생하면 서버에서 데이터를 다시 가져온다.
     staleTime: 5 * 1000,
   });
+
+  // 상태 업데이트는 비동기적으로 이루어지기 때문에, 상태 변경 직후에는 그 값이 즉시 반영되지 않는다.
+  // 예를 들어, handleMovePrevPage에서 setCurrentPage 호출 후 바로 prefetchQuery를 실행하면, 업데이트된 페이지 값이 prefetchQuery에 반영되지 않는다.
+  // 하지만 useEffect는 상태가 변경된 후에 실행되므로, 업데이트된 currentPage 값으로 prefetchQuery를 실행할 수 있다.
+  useEffect(() => {
+    if (currentPage < maxPostPage) {
+      const nextPage = currentPage + 1;
+      queryClient.prefetchQuery({
+        queryKey: ['posts', nextPage],
+        queryFn: () => fetchPosts(nextPage),
+      });
+    }
+  }, [currentPage, queryClient]);
 
   const handleMovePrevPage = () => setCurrentPage((prev) => prev - 1);
 

@@ -10,7 +10,22 @@
 
 ## 3. useQuery 호출
 
-- `useQuery` 훅은 서버에 데이터를 요청하고 비동기적으로 데이터를 처리하는 역할을 한다.
+- `useQuery`는 서버에서 데이터를 가져오고, 그 데이터를 캐시하며 상태를 관리하는 훅이다. 이 훅은 데이터 fetching, 캐싱, 상태 업데이트를 처리하고, `staleTime`, `cacheTime`, `refetchInterval` 등의 옵션으로 쿼리의 동작을 제어할 수 있다.
+
+> ### useQueryClient
+>
+> - `useQueryClient`는 QueryClient 객체에 접근하여 쿼리 캐시를 직접 조작하거나, 쿼리를 수동으로 리페칭(refetch)하는 등의 작업을 할 수 있는 훅이다. 이를 통해 캐시된 데이터를 업데이트, 삭제하거나 쿼리의 상태를 관리할 수 있으며, `invalidateQueries`, `refetchQueries`, `setQueryData`, `getQueryData` 등의 메서드를 통해 쿼리 데이터를 제어한다.
+>
+> ### useQuery와 useQueryClient의 주요 차이점
+>
+> |       훅       | 목적                                          | 사용 예시                                      |
+> | :------------: | --------------------------------------------- | ---------------------------------------------- |
+> |    useQuery    | 데이터를 가져오고, 상태를 관리하는 데 사용    | 서버에서 데이터를 가져오고 로딩/에러 상태 관리 |
+> | useQueryClient | 쿼리 캐시 및 상태를 수동으로 조작하는 데 사용 | 캐시된 데이터를 업데이트하거나, 쿼리를 무효화  |
+
+> #### 참고
+>
+> - [useQuery](https://tanstack.com/query/latest/docs/framework/react/reference/useQuery)
 
 # isFetching과 isLoading
 
@@ -25,6 +40,10 @@
 ## 2. isLoading
 
 - `isLoading`은 `isFetching`의 하위 집합으로, 쿼리 함수가 아직 완료되지 않은 상태이고 캐시된 데이터도 없을 때를 의미한다. 이 경우에는 이전에 해당 쿼리를 실행한 적이 없어서 새로 데이터를 가져오고 있는 중임을 나타낸다.
+
+> #### 참고
+>
+> - [Query Retries](https://tanstack.com/query/latest/docs/framework/react/guides/query-retries)
 
 # staleTime과 gcTime
 
@@ -77,3 +96,24 @@
 - `queryKey`는 데이터를 고유하게 식별하는 역할을 할 뿐만 아니라, 종속성 배열로서도 기능한다. `queryKey`에 배열의 두 번째 요소를 추가하면, 이 값이 변경될 때마다 새로운 쿼리가 생성된다. 이로 인해 각 쿼리는 개별적인 staleTime과 cacheTime을 가지며, 두 번째 요소가 달라지면 완전히 다른 쿼리로 간주된다.
 
 - 따라서 데이터를 가져오는 쿼리 함수에서 사용하는 모든 값은 `queryKey`의 일부로 포함되어야 하며, 이를 통해 해당 값에 대한 종속성도 함께 관리된다. `queryKey`에 변수를 추가하면, 해당 변수를 기준으로 쿼리가 독립적으로 캐시되고, 변수 값이 변경될 때마다 쿼리가 자동으로 다시 실행되어 최신 데이터를 가져온다.
+
+# Prefetching
+
+- Prefetching은 데이터를 캐시에 미리 추가하는 과정이다. 이때, 데이터를 캐시에 추가할 수는 있지만 기본적으로 그 데이터는 stale 상태로 간주된다. 이후 데이터를 사용할 때, 데이터가 여전히 stale 상태이기 때문에 다시 서버에서 데이터를 가져와야 한다. 그러나 데이터를 다시 가져오는 동안, Tanstack Query는 캐시된 데이터를 제공하여 사용자 경험을 유지한다. 또한, 캐시가 만료되지 않았다면 새로고침이 일어날 때까지 캐시된 데이터를 표시할 수 있다.
+
+- 예를 들어, 사용자가 특정 포스트 페이지에서 캐시된 데이터를 오랫동안 보고 있을 경우, 이후 다른 페이지를 클릭했을 때 캐시가 만료되어 데이터가 없을 수 있다. 이 경우, 사용자 화면에는 로딩 상태가 표시된다.
+
+> #### 참고
+>
+> - [Prefetching & Router Integration](https://tanstack.com/query/latest/docs/framework/react/guides/prefetching#prefetchquery--prefetchinfinitequery)
+
+# useQuery와 useQueryClient
+
+## 1. useQuery
+
+- useQuery는 데이터를 가져오는 데 사용되는 훅입니다. 서버에서 데이터를 요청하고, 그 데이터를 캐시하거나 상태를 관리하는 데 사용됩니다. 이 훅은 주로 데이터 fetching, 캐싱, 그리고 상태 업데이트를 관리하는 데 사용됩니다.
+
+서버에서 데이터를 fetch합니다.
+쿼리의 상태(예: 로딩, 에러, 성공 등)를 관리합니다.
+데이터를 캐시에 저장하고, 자동으로 갱신합니다.
+staleTime, cacheTime, refetchInterval 등 다양한 옵션을 통해 쿼리의 동작을 제어할 수 있습니다.
