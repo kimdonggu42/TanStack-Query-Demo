@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router';
 
 import App from '@/App';
 import BlogEm from '@/pages/blog-em/Page';
-import InfiniteSwapi from '@/pages/infinite-swapi/page';
+import InfiniteSwapi from './infinite-swapi/Page';
 import LazyDays from '@/pages/lazy-days/page';
 
 export const router = createBrowserRouter([
