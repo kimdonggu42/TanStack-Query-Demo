@@ -15,6 +15,10 @@
 - `useInfiniteQuery`를 사용할 때, 쿼리 함수는 객체에서 구조 분해된 `pageParam`을 받으며, 이를 기본 URL로 설정된 값으로 초기화한다.
   이 함수는 기본 URL로 설정된 페이지 매개변수를 사용하여, 해당 `pageParam`을 기반으로 정의된 fetch URL을 실행한다. `fetchUrl`은 해당 페이지를 로딩하고, `pageParam`을 사용하여 적절한 페이지를 요청한 뒤 결과를 반환한다.
 
+  pageParam은 useInfiniteQuery에서 데이터를 가져오는 데 필요한 페이지 정보를 담고 있는 매개변수다. 이 매개변수는 **쿼리 함수(queryFn)**에 전달되어 데이터를 요청하는 URL을 동적으로 생성하는 데 사용된다. 예를 들어, 페이지 번호, URL, 또는 페이지네이션에 필요한 다른 정보가 될 수 있다.
+
+pageParam은 첫 번째 요청 이후 자동으로 업데이트되어 다음 페이지 데이터를 가져올 때 사용된다. useInfiniteQuery는 이전 페이지의 데이터를 기반으로 다음 페이지를 요청하기 위해 pageParam을 활용한다.
+
 ```javascript
 useInfiniteQuery({
   queryKey: ['sw-people'],
@@ -26,24 +30,21 @@ useInfiniteQuery({
 
 # useInfiniteQuery 반환 객체의 속성
 
-## 1. fetchNextPage
+## 1. getNextPageParam
 
-- `fetchNextPage`는 사용자가 더 많은 데이터를 요청할 때 호출하는 함수다. 예를 들어, 더 많은 데이터를 요청하는 버튼을 클릭하거나 화면에서 데이터가 부족해질 때 호출된다.
+- `getNextPageParam`은 다음 페이지를 요청할 때 필요한 파라미터를 반환하는 함수다. 이 함수는 API 응답에서 제공되는 정보(예: next 같은)를 기반으로, 더 이상 페이지가 없으면 `undefined` 또는 `null`을 반환한다. `getNextPageParam`은 `lastPage`(마지막으로 로드된 페이지의 데이터)와 `allPages`(지금까지 로드된 모든 페이지의 데이터 배열)를 인자로 받아 다음 페이지 파라미터를 계산한다.
+
+- 예를 들어, 첫 번째 페이지의 응답 데이터에는 `next`와 같은 필드가 있을 수 있다. `getNextPageParam`은 이 `next` 값을 추출하여 **다음 페이지를 요청하는 데 필요한 pageParam**을 반환한다.
 
 ## 2. hasNextPage
 
-- `hasNextPage`는 다음 페이지가 있는지 확인하는 속성이다. 이 값은 `getNextPageParam` 함수의 반환 값에 기반하며, `useInfiniteQuery`에서 마지막 쿼리 데이터를 사용하여 다음 쿼리가 무엇이 될지 알려준다.
+- `hasNextPage`는 다음 페이지가 있는지(더 불러올 데이터가 있는지) 확인하는 속성이다. 이 값은 `getNextPageParam` 함수의 반환 값에 기반하며, `useInfiniteQuery`에서 마지막 쿼리 데이터를 사용하여 다음 쿼리가 무엇이 될지 알려준다.
 
 - `hasNextPage`가 `undefined`라면 더 이상 데이터가 없다는 것을 의미하며, `useInfiniteQuery`에서 반환된 객체의 `hasNextPage` 속성은 `false`가 된다.
 
 ## 3. isFetchingNextPage
 
 - `isFetchingNextPage`는 `useQuery`에는 없는 속성으로, `useInfiniteQuery`에서만 제공된다. 이를 통해 사용자가 다음 페이지를 가져오는 중인지, 아니면 일반적으로 데이터를 가져오는 중인지 구별할 수 있다.
-
-> #### 참고
->
-> - [Infinite Queries](https://tanstack.com/query/latest/docs/framework/react/guides/infinite-queries)
-> - [useInfiniteQuery](https://tanstack.com/query/latest/docs/framework/react/reference/useInfiniteQuery)
 
 # 흐름
 
@@ -66,3 +67,8 @@ useInfiniteQuery({
 ### 4-2. hasNextPage가 false일 경우 (다음 페이지가 없는 경우)
 
 - `hasNextPage`는 `pageParam`이 `undefined`이기 때문에 `false`로 설정된다.
+
+> #### 참고
+>
+> - [Infinite Queries](https://tanstack.com/query/latest/docs/framework/react/guides/infinite-queries)
+> - [useInfiniteQuery](https://tanstack.com/query/latest/docs/framework/react/reference/useInfiniteQuery)
