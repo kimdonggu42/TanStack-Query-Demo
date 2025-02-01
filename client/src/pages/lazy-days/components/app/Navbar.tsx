@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import { GiFlowerPot } from 'react-icons/gi';
 import { Link as RouterLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { useLoginData } from '@/pages/lazy-days/auth/AuthContext';
+import { useLoginData } from '@/providers/AuthProvider';
 import { useAuthActions } from '@/pages/lazy-days/auth/useAuthActions';
 import { useUser } from '@/pages/lazy-days/components/user/hooks/useUser';
 
@@ -52,11 +52,11 @@ export default function Navbar() {
         <HStack>
           {userId ? (
             <>
-              {user && <NavLink to={`/user/${user.id}`}>{user.email}</NavLink>}
+              {user && <NavLink to={`/lazy-days/user/${user.id}`}>{user.email}</NavLink>}
               <Button onClick={() => signout()}>Sign out</Button>
             </>
           ) : (
-            <Button onClick={() => navigate('/signin')}>Sign in</Button>
+            <Button onClick={() => navigate('/lazy-days/signin')}>Sign in</Button>
           )}
         </HStack>
       </Flex>

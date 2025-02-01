@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLoginData } from '@/pages/lazy-days/auth/AuthContext';
+import { useLoginData } from '@/providers/AuthProvider';
 import { useAuthActions } from '@/pages/lazy-days/auth/useAuthActions';
 
 export default function Signin() {

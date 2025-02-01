@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import type { Appointment } from '../../../../../../shared/types';
 import { useCancelAppointment } from '@/pages/lazy-days/components/appointments/hooks/useCancelAppointment';
 import { useUserAppointments } from '@/pages/lazy-days/components/user/hooks/useUserAppointments';
-import { useLoginData } from '@/pages/lazy-days/auth/AuthContext';
+import { useLoginData } from '@/providers/AuthProvider';
 
 interface AppointmentsTableProps {
   userAppointments: Appointment[];

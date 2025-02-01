@@ -1,5 +1,5 @@
 import { Image } from '@chakra-ui/react';
-import splashImg from '@/pages/lazy-days/images/splash.jpg';
+import splashImg from '@/assets/splash.jpg';
 
 export default function BackgroundImage() {
   return (

@@ -6,7 +6,7 @@ import {
   appointmentInPast,
   getAppointmentColor,
 } from '@/pages/lazy-days/components/appointments/utils';
-import { useLoginData } from '@/pages/lazy-days/auth/AuthContext';
+import { useLoginData } from '@/providers/AuthProvider';
 
 interface AppointmentProps {
   appointmentData: AppointmentType;

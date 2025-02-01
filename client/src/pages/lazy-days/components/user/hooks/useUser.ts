@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import type { User } from '../../../../../../../shared/types';
-import { useLoginData } from '@/pages/lazy-days/auth/AuthContext';
+import { useLoginData } from '@/providers/AuthProvider';
 import { axiosInstance, getJWTHeader } from '@/pages/lazy-days/axiosInstance/index';
 import { queryKeys } from '@/pages/lazy-days/react-query/constants';
 

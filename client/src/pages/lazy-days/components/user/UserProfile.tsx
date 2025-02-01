@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { usePatchUser } from '@/pages/lazy-days/components/user/hooks/usePatchUser';
 import { useUser } from '@/pages/lazy-days/components/user/hooks/useUser';
 import UserAppointments from '@/pages/lazy-days/components/user/UserAppointments';
-import { useLoginData } from '@/pages/lazy-days/auth/AuthContext';
+import { useLoginData } from '@/providers/AuthProvider';
 
 interface FormValues {
   name: string;

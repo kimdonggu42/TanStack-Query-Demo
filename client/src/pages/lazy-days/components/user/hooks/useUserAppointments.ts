@@ -1,6 +1,6 @@
 import type { Appointment } from '../../../../../../../shared/types';
 import { axiosInstance, getJWTHeader } from '@/pages/lazy-days/axiosInstance/index';
-import { useLoginData } from '@/pages/lazy-days/auth/AuthContext';
+import { useLoginData } from '@/providers/AuthProvider';
 
 // for when we need a query function for useQuery
 // async function getUserAppointments(

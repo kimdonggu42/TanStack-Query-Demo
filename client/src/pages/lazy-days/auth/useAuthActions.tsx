@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { User } from '../../../../../shared/types';
-import { useLoginData } from '@/pages/lazy-days/auth/AuthContext';
+import { useLoginData } from '@/providers/AuthProvider';
 import { axiosInstance } from '@/pages/lazy-days/axiosInstance/index';
 import { useCustomToast } from '@/pages/lazy-days/components/app/hooks/useCustomToast';
 import { useUser } from '@/pages/lazy-days/components/user/hooks/useUser';

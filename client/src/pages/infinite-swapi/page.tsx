@@ -1,4 +1,4 @@
-import QueryProvider from '@/providers/QueryProvider';
+import { QueryProvider } from '@/providers/QueryProvider';
 import InfinitePeople from '@/pages/infinite-swapi/InfinitePeople';
 
 export default function InfiniteSwapi() {

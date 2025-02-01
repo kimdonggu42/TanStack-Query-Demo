@@ -1,5 +1,5 @@
 import { Appointment } from '../../../../../../../shared/types';
-import { useLoginData } from '@/pages/lazy-days/auth/AuthContext';
+import { useLoginData } from '@/providers/AuthProvider';
 import { axiosInstance } from '@/pages/lazy-days/axiosInstance/index';
 import { useCustomToast } from '@/pages/lazy-days/components/app/hooks/useCustomToast';
 import { queryKeys } from '@/pages/lazy-days/react-query/constants';

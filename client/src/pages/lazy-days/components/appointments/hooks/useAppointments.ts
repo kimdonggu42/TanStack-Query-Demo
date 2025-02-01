@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { AppointmentDateMap } from '@/pages/lazy-days/components/appointments/types';
 import { getAvailableAppointments } from '@/pages/lazy-days/components/appointments/utils';
 import { getMonthYearDetails, getNewMonthYear } from './monthYear';
-import { useLoginData } from '@/pages/lazy-days/auth/AuthContext';
+import { useLoginData } from '@/providers/AuthProvider';
 import { axiosInstance } from '@/pages/lazy-days/axiosInstance/index';
 import { queryKeys } from '@/pages/lazy-days/react-query/constants';
 

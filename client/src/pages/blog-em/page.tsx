@@ -1,4 +1,4 @@
-import QueryProvider from '@/providers/QueryProvider';
+import { QueryProvider } from '@/providers/QueryProvider';
 import Posts from '@/pages/blog-em/Posts';
 
 export default function BlogEm() {

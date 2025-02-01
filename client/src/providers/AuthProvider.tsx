@@ -25,7 +25,7 @@ export const useLoginData = () => {
   return authValue;
 };
 
-export const AuthContextProvider = ({ children }: React.PropsWithChildren<object>) => {
+export const AuthProvider = ({ children }: React.PropsWithChildren<object>) => {
   const [loginData, setLoginDataRaw] = useState<LoginData | null>(() => getStoredLoginData());
 
   // can't destructure since loginData might be null
