@@ -86,7 +86,7 @@ export const startUp = async () => {
   await createAppointments();
 
   // eslint-disable-next-line no-console
-  app.listen(3030, () => console.log('Spa server listening on port 3030!'));
+  app.listen(8080, () => console.log('Spa server listening on port 8080'));
 };
 
 export default app;
