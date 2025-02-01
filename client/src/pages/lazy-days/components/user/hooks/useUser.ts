@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import type { User } from '../../../../../../../shared/types';
 import { useLoginData } from '@/providers/AuthProvider';
-import { axiosInstance, getJWTHeader } from '@/pages/lazy-days/axiosInstance/index';
+import { axiosInstance, getJWTHeader } from '@/pages/lazy-days/axiosInstance/instance';
 import { queryKeys } from '@/pages/lazy-days/react-query/constants';
 
 // query function

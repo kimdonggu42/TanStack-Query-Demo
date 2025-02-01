@@ -1,5 +1,5 @@
 import type { Treatment } from '../../../../../../../shared/types';
-import { axiosInstance } from '@/pages/lazy-days/axiosInstance';
+import { axiosInstance } from '@/pages/lazy-days/axiosInstance/instance';
 import { queryKeys } from '@/pages/lazy-days/react-query/constants';
 
 // for when we need a query function for useQuery

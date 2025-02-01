@@ -1,6 +1,6 @@
 import jsonpatch from 'fast-json-patch';
 import type { User } from '../../../../../../../shared/types';
-import { axiosInstance, getJWTHeader } from '@/pages/lazy-days/axiosInstance/index';
+import { axiosInstance, getJWTHeader } from '@/pages/lazy-days/axiosInstance/instance';
 import { useUser } from '@/pages/lazy-days/components/user/hooks/useUser';
 
 // for when we need a server function

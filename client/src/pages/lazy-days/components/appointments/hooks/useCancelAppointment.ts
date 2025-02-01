@@ -1,5 +1,5 @@
 import { Appointment } from '../../../../../../../shared/types';
-import { axiosInstance } from '@/pages/lazy-days/axiosInstance';
+import { axiosInstance } from '@/pages/lazy-days/axiosInstance/instance';
 import { useCustomToast } from '@/pages/lazy-days/components/app/hooks/useCustomToast';
 import { queryKeys } from '@/pages/lazy-days/react-query/constants';
 // for when server call is needed
