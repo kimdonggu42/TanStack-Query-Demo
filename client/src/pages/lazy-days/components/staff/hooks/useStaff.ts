@@ -1,21 +1,22 @@
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import type { Staff } from '../../../../../../../shared/types';
-import { filterByTreatment } from '@/pages/lazy-days/components/staff/utils';
-import { axiosInstance } from '@/axiosInstance';
+import { axiosInstance } from '@/pages/lazy-days/axiosInstance/instance';
 import { queryKeys } from '@/pages/lazy-days/react-query/constants';
 
-// query function for useQuery
-// async function getStaff(): Promise<Staff[]> {
-//   const { data } = await axiosInstance.get('/staff');
-//   return data;
-// }
+const getStaff = async (): Promise<Staff[]> => {
+  const { data } = await axiosInstance.get('/staff');
+  return data;
+};
 
 export const useStaff = () => {
-  // for filtering staff by treatment
   const [filter, setFilter] = useState('all');
+  const fallback: Staff[] = [];
 
-  // TODO: get data from server via useQuery
-  const staff: Staff[] = [];
+  const { data: staff = fallback } = useQuery({
+    queryKey: [queryKeys.staff],
+    queryFn: getStaff,
+  });
 
   return { staff, filter, setFilter };
 };
