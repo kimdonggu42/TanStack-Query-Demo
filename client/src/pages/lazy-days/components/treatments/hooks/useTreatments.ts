@@ -1,5 +1,5 @@
 import type { Treatment } from '../../../../../../../shared/types';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { axiosInstance } from '@/pages/lazy-days/axiosInstance/instance';
 import { queryKeys } from '@/pages/lazy-days/react-query/constants';
 
@@ -17,4 +17,12 @@ export const useTreatments = (): Treatment[] => {
   });
 
   return data;
+};
+
+export const usePrefetchTreatments = (): void => {
+  const queryClient = useQueryClient();
+  queryClient.prefetchQuery({
+    queryKey: [queryKeys.treatments],
+    queryFn: getTreatments,
+  });
 };
