@@ -4,14 +4,20 @@ import Appointment from '@/pages/lazy-days/components/appointments/Appointment';
 
 interface DateBoxProps {
   date: number;
-  gridColumn?: number;
+  gridColumn?: number | null;
   appointments?: AppointmentType[];
 }
-DateBox.defaultProps = { gridColumn: null, appointments: [] };
 
-export default function DateBox({ date, gridColumn, appointments = [] }: DateBoxProps) {
+export default function DateBox({ date, gridColumn = null, appointments = [] }: DateBoxProps) {
   return (
-    <Box w='100%' h={20} bg='olive.50' gridColumnStart={gridColumn} boxShadow='md' rounded='md'>
+    <Box
+      w='100%'
+      h={20}
+      bg='olive.50'
+      gridColumnStart={gridColumn ?? undefined}
+      boxShadow='md'
+      rounded='md'
+    >
       <Stack m={2} spacing={1}>
         <Text fontSize='xs' textAlign='right'>
           {date}
