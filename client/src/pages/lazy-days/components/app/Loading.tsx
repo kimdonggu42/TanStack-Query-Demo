@@ -1,8 +1,10 @@
 import { Spinner, Text } from '@chakra-ui/react';
+import { useIsFetching } from '@tanstack/react-query';
 
 export default function Loading() {
-  // will use React Query `useIsFetching` to determine whether or not to display
-  const isFetching = false; // for now, just don't display
+  // useIsFetching 훅은 기본적으로 앱 내에서 실행 중인 모든 쿼리를 감지하며, 현재 fetching 중인 쿼리 개수를 반환한다.
+  // queryKey를 지정하면 특정 데이터 요청만 감지 가능하다.
+  const isFetching = useIsFetching();
   const display = isFetching ? 'inherit' : 'none';
 
   return (
