@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { AppointmentDateMap } from '@/pages/lazy-days/components/appointments/types';
 import { getAvailableAppointments } from '@/pages/lazy-days/components/appointments/utils';
@@ -48,6 +48,14 @@ export const useAppointments = () => {
   // `getAvailableAppointments` 함수에 사용자 정보를 전달해야 함
   const { userId } = useLoginData();
 
+  const selectFn = useCallback(
+    (data: AppointmentDateMap, showAll: boolean) => {
+      if (showAll) return data;
+      return getAvailableAppointments(data, userId);
+    },
+    [userId],
+  );
+
   // 3: useQuery
   // 현재 `monthYear`에 해당하는 예약을 가져오기 위한 `useQuery` 호출
   const queryClient = useQueryClient();
@@ -70,6 +78,8 @@ export const useAppointments = () => {
   const { data: appointments = fallback } = useQuery({
     queryKey: [queryKeys.appointments, monthYear.year, monthYear.month],
     queryFn: () => getAppointments(monthYear.year, monthYear.month),
+    // 기본적으로 선택 함수에는 useQuery 쿼리 함수에서 반환된 데이터가 전달된다.
+    select: (data) => selectFn(data, showAll),
   });
 
   return { appointments, monthYear, updateMonthYear, showAll, setShowAll };

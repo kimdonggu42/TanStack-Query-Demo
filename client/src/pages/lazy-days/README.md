@@ -118,3 +118,52 @@ const { data } = useQuery({
 |  setQueryData   | queryClient 메서드 |   client    |        O         |
 | placeholderData |   useQuery 옵션    |   client    |        X         |
 |   initialData   |   useQuery 옵션    |   client    |        O         |
+
+# 선택 옵션을 사용한 필터링
+
+- TanStack Query는 불필요한 연산을 줄이기 위해 메모이제이션을 활용하여 성능을 최적화하며, 선택 함수(select function)의 결과를 캐싱하고 `===` 비교를 수행하여 데이터 또는 선택 함수가 변경된 경우에만 다시 실행한다.
+
+- 즉, 데이터가 이전과 동일하고, 선택 함수도 변하지 않았다면 불필요한 재계산 없이 기존 결과를 재사용한다.
+  이러한 최적화 덕분에 Tanstack Query는 최소한의 연산만 수행하면서도 최신 데이터를 유지할 수 있다.
+
+- TanStack Query에서 `select` 옵션은 쿼리 함수에서 반환된 데이터를 변환하여, 컴포넌트가 필요한 형식으로 가공할 수 있도록 도와준다.
+
+- 뿐만 아니라, 불필요한 연산을 줄이고 성능을 최적화하는 역할도 수행하는데, TanStack Query는 `select` 함수의 실행 결과를 메모이제이션(Memoization) 하며, 이전 데이터와 선택 함수가 변경되지 않았다면 기존 결과를 그대로 재사용한다.
+
+## 1. select를 활용한 데이터 가공
+
+- 기본적으로 `select` 함수에는 쿼리 함수에서 반환된 데이터가 전달된다. 이를 이용해 데이터를 필터링하거나 변환하여 컴포넌트가 원하는 형식으로 가공할 수 있다.
+
+- `fetchUsers()`가 반환한 데이터는 사용자 객체 배열이지만, `select`를 사용해 이름만 추출한 배열을 반환하도록 변경할 수 있다. 이렇게 하면 컴포넌트 내부에서 추가적인 가공 없이 데이터를 바로 사용할 수 있다.
+
+```javascript
+const selectFn = (data: UserType[]) => data.map((user) => user.name);
+
+const { data: userNames } = useQuery({
+  queryKey: ['users'],
+  queryFn: fetchUsers, // [{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }]
+  select: selectUserNames, // ['Alice', 'Bob']
+});
+```
+
+## 2. select를 사용할 때 주의할 점
+
+- `select` 함수가 매번 새로운 객체를 반환하면 메모이제이션이 제대로 동작하지 않을 수 있으며, 새로운 배열/객체를 반환하는 경우 이전 데이터와 비교가 어려워 불필요한 재렌더링이 발생할 수 있다.
+
+- 위 예시 코드를 보면 `select` 함수가 렌더링될 때마다 새로운 함수를 생성하여 Tanstack Query의 메모이제이션이 제대로 동작하지 않을 수 있다.
+
+- 이를 방지하기 위해 `useCallback`을 사용하여 `selectFn`을 메모이제이션한다. 의존성에 포함된 값이 변경되지 않는 한 `selectFn`이 새로 생성되지 않는다.
+
+```javascript
+const selectFn = useCallback((data: UserType[]) => data.map((user) => user.name), [userId]);
+
+const { data: userNames } = useQuery({
+  queryKey: ["users"],
+  queryFn: fetchUsers,
+  select: selectFn,
+});
+```
+
+> #### 참고
+>
+> - [React Query Data Transformations](https://tkdodo.eu/blog/react-query-data-transformations)
