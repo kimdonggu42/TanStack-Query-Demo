@@ -302,6 +302,21 @@ const { data } = useQuery({
 
 리페칭을 억제할 때는 기본적으로 자주 변경되지 않으며, 약간 오래된 데이터라도 사용자 경험에 큰 영향을 미치지 않는 경우에만 적용해야 한다. 예를 들어, 실시간 데이터(예: 라이브 업데이트가 필요한 데이터, 새로운 알림, 메시지 등)는 리페칭을 억제 시 주의 해야한다.
 
+## 4. 전역 리페치
+
+- TanStack Query에서는 개별적인 useQuery에서 리페칭 옵션을 설정할 수도 있지만, 전역적으로 모든 쿼리의 기본 리페칭 동작을 설정할 수도 있다.
+
+```javascript
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 10, // 10분 동안 데이터를 fresh 상태로 유지
+      gcTime: 1000 * 60 * 15, // 15분 후 캐시 삭제
+    },
+  },
+});
+```
+
 > #### 참고
 >
 > - [Important Defaults](https://tanstack.com/query/latest/docs/framework/react/guides/important-defaults)
