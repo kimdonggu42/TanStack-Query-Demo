@@ -88,6 +88,7 @@ export const useAppointments = () => {
     // 기본적으로 선택 함수에는 useQuery 쿼리 함수에서 반환된 데이터가 전달된다.
     select: (data) => selectFn(data, showAll),
     refetchOnWindowFocus: true,
+    refetchInterval: 1000 * 60,
     ...commonOptions,
   });
 
