@@ -11,6 +11,11 @@ import { useLoginData } from '@/providers/AuthProvider';
 import { axiosInstance } from '@/pages/lazy-days/axiosInstance/instance';
 import { queryKeys } from '@/pages/lazy-days/react-query/constants';
 
+const commonOptions = {
+  staleTime: 0,
+  gcTime: 1000 * 60 * 5,
+};
+
 // useQuery 호출을 위한 함수
 const getAppointments = async (year: string, month: string): Promise<AppointmentDateMap> => {
   const { data } = await axiosInstance.get(`/appointments/${year}/${month}`);
@@ -58,6 +63,7 @@ export const useAppointments = () => {
 
   // 3: useQuery
   // 현재 `monthYear`에 해당하는 예약을 가져오기 위한 `useQuery` 호출
+
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -65,8 +71,9 @@ export const useAppointments = () => {
     queryClient.prefetchQuery({
       queryKey: [queryKeys.appointments, nextMonthYear.year, nextMonthYear.month],
       queryFn: () => getAppointments(nextMonthYear.year, nextMonthYear.month),
+      ...commonOptions,
     });
-  }, [queryClient, monthYear]);
+  }, [queryClient, monthYear, commonOptions]);
 
   // 참고 사항:
   //    1. `appointments`는 `AppointmentDateMap` 형식의 객체임
@@ -80,6 +87,8 @@ export const useAppointments = () => {
     queryFn: () => getAppointments(monthYear.year, monthYear.month),
     // 기본적으로 선택 함수에는 useQuery 쿼리 함수에서 반환된 데이터가 전달된다.
     select: (data) => selectFn(data, showAll),
+    refetchOnWindowFocus: true,
+    ...commonOptions,
   });
 
   return { appointments, monthYear, updateMonthYear, showAll, setShowAll };
