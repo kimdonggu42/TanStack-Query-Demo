@@ -23,7 +23,7 @@ export default function UserProfile() {
     // use login data for redirect, for base app that doesn't
     //   retrieve user data from the server yet
     if (!userId) {
-      navigate('/signin');
+      navigate('/lazy-days/signin');
     }
   }, [userId, navigate]);
 
@@ -45,6 +45,7 @@ export default function UserProfile() {
               phone: user?.phone ?? '',
             }}
             onSubmit={(values: FormValues) => {
+              if (!user) return;
               patchUser({ ...user, ...values });
             }}
           >

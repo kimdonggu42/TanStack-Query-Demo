@@ -125,6 +125,15 @@ const { data } = useQuery({
 | placeholderData |   useQuery 옵션    |   client    |        X         |
 |   initialData   |   useQuery 옵션    |   client    |        O         |
 
+### 5. removeQueries
+
+- `removeQueries`는 특정 키를 가진 쿼리를 캐시에서 삭제한다. 삭제된 데이터는 gcTime을 기다릴 필요 없이 즉시 제거되며, 다시 `useQuery`가 실행되면 새로운 요청을 보내 데이터를 가져온다.
+
+```javascript
+// ["user", userId] 키를 가진 캐시 데이터를 즉시 삭제
+queryClient.removeQueries(['user', userId]);
+```
+
 # 선택 옵션을 사용한 필터링
 
 - TanStack Query는 불필요한 연산을 줄이기 위해 메모이제이션을 활용하여 성능을 최적화하며, 선택 함수(select function)의 결과를 캐싱하고 `===` 비교를 수행하여 데이터 또는 선택 함수가 변경된 경우에만 다시 실행한다.

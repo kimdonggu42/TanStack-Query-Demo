@@ -26,7 +26,7 @@ export default function Signin() {
 
   useEffect(() => {
     if (userId) {
-      navigate(`/user/${userId}`);
+      navigate(`/lazy-days/user/${userId}`);
     }
   }, [userId, navigate]);
 
