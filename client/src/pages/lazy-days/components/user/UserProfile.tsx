@@ -2,10 +2,12 @@ import { Box, Button, Flex, FormControl, FormLabel, Heading, Input, Stack } from
 import { Field, Form, Formik } from 'formik';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { usePatchUser } from '@/pages/lazy-days/components/user/hooks/usePatchUser';
+import { usePatchUser, MUTATION_KEY } from '@/pages/lazy-days/components/user/hooks/usePatchUser';
 import { useUser } from '@/pages/lazy-days/components/user/hooks/useUser';
 import UserAppointments from '@/pages/lazy-days/components/user/UserAppointments';
 import { useLoginData } from '@/providers/AuthProvider';
+import { useMutationState } from '@tanstack/react-query';
+import type { User } from '../../../../../../shared/types';
 
 interface FormValues {
   name: string;
@@ -20,12 +22,17 @@ export default function UserProfile() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // use login data for redirect, for base app that doesn't
-    //   retrieve user data from the server yet
-    if (!userId) {
-      navigate('/lazy-days/signin');
-    }
+    if (!userId) navigate('/lazy-days/signin');
   }, [userId, navigate]);
+
+  const pendingData = useMutationState({
+    filters: { mutationKey: [MUTATION_KEY], status: 'pending' },
+    select: (mutation) => {
+      return mutation.state.variables as User;
+    },
+  });
+
+  const pendingUser = pendingData ? pendingData[0] : null;
 
   const formElements = ['name', 'address', 'phone'];
 
@@ -34,7 +41,7 @@ export default function UserProfile() {
       <Stack spacing={8} mx='auto' w='xl' py={12} px={6}>
         <UserAppointments />
         <Stack textAlign='center'>
-          <Heading>Your information</Heading>
+          <Heading>Information for {pendingUser ? pendingUser.name : user?.name}</Heading>
         </Stack>
         <Box rounded='lg' bg='white' boxShadow='lg' p={8}>
           <Formik

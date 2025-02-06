@@ -329,3 +329,28 @@ export const queryClient = new QueryClient({
 > #### 참고
 >
 > - [Important Defaults](https://tanstack.com/query/latest/docs/framework/react/guides/important-defaults)
+
+# Optimistic Updates
+
+- Tanstack Query의 Optimistic Updates(낙관적 업데이트)는 데이터가 서버에서 성공적으로 업데이트되기 전에 UI를 먼저 변경하는 기법으로, 이를 통해 서버 응답 대기 시간을 줄이고 즉각적인 피드백을 제공하여 사용자 경험을 향상시킬 수 있다. 네트워크 지연이 있는 경우에도 서버 응답을 기다리지 않고 UI를 먼저 업데이트하여 데이터 변경을 빠르게 반영할 수 있다.
+
+## 1. 왜 Optimistic Updates를 사용해야 할까?
+
+- 일반적으로, 데이터를 변경하는 Mutation(예: useMutation)을 사용할 때 UI는 다음과 같은 과정을 거친다.
+
+  1. 사용자가 버튼을 클릭하여 데이터를 변경 요청
+
+  2. 서버에 요청을 보내고 응답을 기다림
+
+  3. 응답을 받은 후, UI를 업데이트하여 변경 사항 반영
+
+```javascript
+// onSettled는 요청이 성공하든 실패하든 마지막에 실행되며, 서버에서 최신 데이터를 다시 가져온다.
+onSettled: () => {
+  queryClient.invalidateQueries(['todos']);
+};
+```
+
+> #### 참고
+>
+> - [Optimistic Updates](https://tanstack.com/query/latest/docs/framework/react/guides/optimistic-updatess)

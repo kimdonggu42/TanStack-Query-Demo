@@ -1,35 +1,48 @@
 import jsonpatch from 'fast-json-patch';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { User } from '../../../../../../../shared/types';
 import { axiosInstance, getJWTHeader } from '@/pages/lazy-days/axiosInstance/instance';
 import { useUser } from '@/pages/lazy-days/components/user/hooks/useUser';
+import { toast } from '../../app/toast';
+import { queryKeys } from '@/pages/lazy-days/react-query/constants';
 
-// for when we need a server function
-// async function patchUserOnServer(
-//   newData: User | null,
-//   originalData: User | null,
-//  ): Promise<User | null> {
-//   if (!newData || !originalData) return null;
-//   // create a patch for the difference between newData and originalData
-//   const patch = jsonpatch.compare(originalData, newData);
+export const MUTATION_KEY = 'patch-user';
 
-//   // send patched data to the server
-//   const { data } = await axiosInstance.patch(
-//     `/user/${originalData.id}`,
-//     { patch },
-//     {
-//       headers: getJWTHeader(originalData.token),
-//     },
-//   );
-//   return data.user;
-//  }
+const patchUserOnServer = async (
+  newData: User | null,
+  originalData: User | undefined,
+): Promise<User> => {
+  if (!newData || !originalData) {
+    throw new Error('Invalid user data');
+  }
+
+  const patch = jsonpatch.compare(originalData, newData);
+
+  const { data } = await axiosInstance.patch(
+    `/user/${originalData.id}`,
+    { patch },
+    {
+      headers: getJWTHeader(originalData.token),
+    },
+  );
+  return data.user;
+};
 
 export const usePatchUser = () => {
   const { user, updateUser } = useUser();
+  const queryClient = useQueryClient();
 
-  // TODO: replace with mutate function
-  const patchUser = (newData: User | null) => {
-    // nothing to see here
-  };
+  const { mutate: patchUser } = useMutation({
+    mutationKey: [MUTATION_KEY],
+    mutationFn: (newData: User) => patchUserOnServer(newData, user),
+    onSuccess: () => {
+      toast({ title: 'user updated!', status: 'success' });
+    },
+    // onSettled는 실행되면 성공, 오류 상관없이 실행된다.
+    onSettled: () => {
+      return queryClient.invalidateQueries({ queryKey: [queryKeys.user] });
+    },
+  });
 
   return patchUser;
 };

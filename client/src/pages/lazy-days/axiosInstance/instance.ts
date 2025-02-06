@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { baseUrl } from '@/pages/lazy-days/axiosInstance/constants';
 
-export const getJWTHeader = (userToken: string | null): Record<string, string> => {
+export const getJWTHeader = (userToken: string | null | undefined): Record<string, string> => {
   return { Authorization: `Bearer ${userToken}` };
 };
 
