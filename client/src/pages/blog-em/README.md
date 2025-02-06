@@ -107,10 +107,47 @@
 
 # Mutation
 
-- Mutation은 서버에 네트워크 요청을 보내 실제 데이터를 업데이트하는 작업을 의미한다. 예를 들어, 블로그 포스트를 추가하거나 삭제하거나, 포스트 제목을 변경하는 등의 경우가 이에 해당한다.
+- Mutation은 서버에 네트워크 요청을 보내 실제 데이터를 변경하는 작업을 의미한다. 예를 들어, 블로그 포스트를 추가하거나 삭제하거나 제목을 변경하는 등의 경우가 이에 해당한다.
 
-- `useMutation`은 `useQuery`와 매우 유사하지만 몇 가지 차이점이 있다. `useMutation`은 `mutate` 함수를 반환하는데, 이 함수는 서버에 변경 사항을 적용할 때 사용된다. `useMutation`은 캐시가 없기 때문에 쿼리 키가 필요하지 않으며, `isLoading`과 `isFetching`으로 구분되어 있는 `useQuery`와는 달리 `isPending`만 존재한다. 또한, `useMutation`은 기본적으로 재시도를 하지 않지만, 원하면 자동 재시도를 설정할 수 있다.
+## 1. useMutation
+
+- Tanstack Query의 `useMutation`은 `useQuery`와 유사하지만 몇 가지 차이점이 있다. `useMutation`은 서버에 변경 사항을 적용할 때 사용하는 `mutate` 함수를 반환하며, 한 번의 작업이므로 캐시된 데이터가 존재하지 않는다. 따라서 `useQuery`처럼 데이터를 가져오거나 다시 가져오는 과정이 없으며, `refetch` 기능도 제공되지 않는다.
+
+- 또한 `useMutation`에는 `isLoading` 대신 `isFetching` 상태만 존재한다. 기본적으로 자동 재시도가 없지만, 옵션을 통해 설정할 수 있다.
 
 > #### 참고
 >
 > - [Mutations](https://tanstack.com/query/latest/docs/framework/react/guides/mutations)
+> - [useMutation](https://tanstack.com/query/latest/docs/framework/react/reference/useMutation)
+
+## 2. invalidateQueries
+
+- Mutation이 발생한 후에도 페이지가 자동으로 업데이트되지 않을 수 있다. 이때 `invalidateQueries`를 사용하면 해당 데이터의 캐시를 무효화하여, 사용자가 페이지를 새로고침하지 않아도 최신 데이터를 확인할 수 있다.
+
+-`invalidateQueries`는 지정한 쿼리를 오래된(stale) 것으로 표시하며, 해당 쿼리가 현재 렌더링되고 있다면 자동으로 재요청을 트리거한다. 이를 활용하면 `mutate` 호출이 성공한 후 `onSuccess` 핸들러에서 관련된 쿼리를 무효화하여, 새로운 데이터를 불러오도록 만들 수 있다.
+
+> #### 참고
+>
+> - [Query Invalidation](https://tanstack.com/query/latest/docs/framework/react/guides/query-invalidation)
+
+## 3. Query Filters
+
+- Query Filters는 한 번에 여러 쿼리에 영향을 줄 수 있는 removeQueries, invaliddateQueries, cacelQueries와 같은 쿼리 메서드에 적용된다.
+
+- 이 모든 메서드는 쿼리 필터 인자를 받는다. 이 인자는 특정 필터에 의해 쿼리를 지정하므로 부분 일치를 포함하여 쿼리 키로 필터링할 수 있지만 그 부분 일치는 쿼리 키의 시작 부분이어야 한다. 쿼리의 유형이 활성, 비활성 또는 둘 중 하나인지다. 쿼리가 오래되었는지, 그리고 쿼리가 데이터를 가지고 있는지 여부다. 그래서 이것들은 모두 메서드들에 전달할 수 있는 필터들이다.
+
+- Query Filters는 `removeQueries`, `invalidateQueries`, `cancelQueries`와 같은 쿼리 메서드에 적용되며, 한 번에 여러 쿼리에 영향을 줄 수 있다.
+
+- 이러한 메서드는 모두 쿼리 필터 인자를 받으며, 이를 통해 특정 조건에 맞는 쿼리를 필터링할 수 있다. 필터링 방식은 다음과 같다.
+
+  - 쿼리 키(Query Key): 부분 일치를 포함하여 필터링할 수 있지만, 반드시 쿼리 키의 시작 부분과 일치해야 한다.
+
+  - 쿼리 상태(Query State): 활성(Active), 비활성(Inactive) 여부를 기준으로 필터링할 수 있다.
+
+  - 데이터 상태(Data State): 쿼리가 오래되었는지, 데이터를 보유하고 있는지 여부를 기준으로 필터링할 수 있다.
+
+- 이러한 필터를 활용하면 특정 조건에 맞는 쿼리만 선택적으로 무효화하거나 삭제할 수 있다.
+
+> #### 참고
+>
+> - [Query Filters](https://tanstack.com/query/latest/docs/framework/react/guides/filters#query-filters)
